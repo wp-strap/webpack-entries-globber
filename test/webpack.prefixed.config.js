@@ -7,8 +7,18 @@ module.exports = {
         // Globs
         [
             {
-                globString: path.resolve(__dirname, 'src/**/*.js'),
+                globString: path.resolve(__dirname, 'src/FolderWithLongName/**/*.js'),
                 namePrefix: 'prefixed-folder/'
+            },
+            {
+                globString: path.resolve(__dirname, 'src/Second/**/*.js'),
+            },
+            {
+                globString: path.resolve(__dirname, 'src/Third/**/*.js'),
+            },
+            {
+                globString: path.resolve(__dirname, 'src/*.js'),
+                namePrefix: 'another-prefixed-folder/'
             }
         ],
 

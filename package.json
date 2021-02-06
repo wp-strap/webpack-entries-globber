@@ -41,7 +41,7 @@
         "chai": "^4.2.0",
         "mocha": "^8.2.1",
         "rimraf": "^3.0.2",
-        "webpack": "^5.11.1",
+        "webpack": "^5.12.3",
         "webpack-cli": "^4.3.1"
     },
     "keywords": [

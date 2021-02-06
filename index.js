@@ -1,4 +1,4 @@
-// Fetch depencies
+// Fetch dependencies
 const glob = require('glob');
 const globBase = require('glob-base');
 const path = require('path');

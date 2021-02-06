@@ -1,24 +1,28 @@
-[![travis-build][travis-build]][travis-build-url]
-[![david-dm-status][david-dm-status]][david-dm-status-url]
-[![license][license]][license-url]
-[![downloads-week][downloads-week]][downloads-week-url]
+[![Build Status](https://api.travis-ci.org/wp-strap/webpack-entries-globber.svg?branch=master)](https://travis-ci.org/github/wp-strap/webpack-entries-globber)
+![Tested with WebPack 5.12.3](https://img.shields.io/badge/Tested%20with%20WebPack-5.12.3-brightgreen)
 
+# Webpack-entries-globber
 
-# Webpack-watched-glob-entries-plugin
+This is a fork of Milanzor's Webpack-watched-glob-entries-plugin.
+
 Provides a way to glob for entry files in Webpack `watch` and `non-watch` modes.
+
+Read more about this plugin here:
+https://github.com/Milanzor/webpack-watched-glob-entries-plugin
+
+This version also adds the ability to convert camelcase folders & files to dashed names in the output and add a prefix to the
+filename, so you can move it into a specific folder. I've made this fork for a specific use-case.
 
 ## Install
 
-Install through `yarn` or `npm` =>
-
 ```sh
-yarn add -D webpack-watched-glob-entries-plugin
+yarn add -D webpack-entries-globber
 ```
 
 or
 
 ```sh
-npm install --save-dev webpack-watched-glob-entries-plugin
+npm install --save-dev webpack-entries-globber
 ```
 
 ## Usage
@@ -26,39 +30,50 @@ npm install --save-dev webpack-watched-glob-entries-plugin
 ```js
 
 // Get the plugin
-const WebpackEntriesGlobber = require('webpack-watched-glob-entries-plugin');
- 
+const WebpackEntriesGlobber = require('webpack-entries-globber');
+
 // In your Webpack config:
 {
-    ... // At your entry definition
-    
-    entry: WebpackEntriesGlobber.getEntries(
-      [ 
-        // Your path(s) 
-        path.resolve(__dirname, 'entry/**/*.js'),
-        path.resolve(__dirname, 'more/entries/**/*.js')
-      ],
+... // At your entry definition
+
+  entry: WebpackEntriesGlobber.getEntries(
+    [
+      // Your path(s) 
       {
-          // Optional glob options that are passed to glob.sync()
-          ignore: '**/*.test.js'
+        // The glob path
+        globString: path.resolve(__dirname, 'entries/**/*.js'),
+        // Makes sure the files and sub-folders are moved to this folder
+        namePrefix: 'prefixed-folder/',
+      },
+      {
+        globString: path.resolve(__dirname, 'More/**/*.js'),
       }
-    )
-    
-    ... // At the plugin definition
-    
-    plugins: [
-        new WebpackEntriesGlobber(),
     ],
-    
-    ...
+    // Glob options
+    {
+      // Optional glob options that are passed to glob.sync()
+      ignore: '**/*.test.js'
+    },
+    // Plugin options
+    {
+      // Optional option to convert camelcase folders & files to dashed names
+      camelcase_to_dashes: true
+    }
+  )
+
+... // At the plugin definition
+
+  plugins: [
+    new WebpackEntriesGlobber(),
+  ],
+
+...
 }
 
 ```
 
-## Why?
-I wanted to use Webpack for my projects but was missing a way to add new entries without touching the config.
-
 ## Example
+
 If you have the following source structure:
 
 ```
@@ -68,29 +83,25 @@ If you have the following source structure:
         - stuff.js
     - Other
         - things.js 
+- More
+    - CamelCase
+        - EntryFiles.js
+        EntriesAndOther
+            - Stuff.js
+        
 ```
 
-The entries will look like:
+The entries will look like the following with the above <a href="#Usage">usage</a>:
+
 ```
 {
-    "main":         "/abs/path/to/main.js",
-    "Some/stuff":   "/abs/path/to/Some/stuff.js",
-    "Other/things": "/abs/path/to/Other/things.js"
+    "prefixed-folder/main":               "/abs/path/to/entries/main.js",
+    "prefixed-folder/some/stuff":         "/abs/path/to/entries/Some/stuff.js",
+    "prefixed-folder/other/things":       "/abs/path/to/entries/Other/things.js",
+    "camel-case/entry-files":             "/abs/path/to/More/CamelCase/entries.js"
+    "camel-case/entries-and-other/stuff": "/abs/path/to/More/CamelCase/EntriesAndOther/stuff.js"
 }
 ```
 
-Now add `[name]` in your `output.filename` and the entry file directory structure will be reflected in the output directory.
-
-
-
-[travis-build]: https://api.travis-ci.com/Milanzor/webpack-watched-glob-entries-plugin.svg?branch=master
-[travis-build-url]: https://travis-ci.com/Milanzor/webpack-watched-glob-entries-plugin
-
-[david-dm-status]: https://david-dm.org/milanzor/webpack-watched-glob-entries-plugin.svg
-[david-dm-status-url]: https://david-dm.org/milanzor/webpack-watched-glob-entries-plugin
-
-[license]: https://img.shields.io/github/license/Milanzor/webpack-watched-glob-entries-plugin.svg
-[license-url]: https://github.com/Milanzor/webpack-watched-glob-entries-plugin/blob/master/LICENSE
-
-[downloads-week]: https://img.shields.io/npm/dw/webpack-watched-glob-entries-plugin.svg
-[downloads-week-url]: https://www.npmjs.com/package/webpack-watched-glob-entries-plugin
+Now add `[name]` in your `output.filename` and the entry file directory structure will be reflected in the output
+directory.

@@ -4,18 +4,18 @@ const path = require('path');
 
 describe('Output', () => {
     it('Camelcase folder #1 needs to be prefixed', () => {
-        assert.equal(fs.existsSync(path.resolve(__dirname, '../dist/prefixed-folder/folder-with-long-name/file-with-long-name.js')), true);
+        assert.equal(fs.existsSync(path.resolve(__dirname, '../dist/prefixed-folder/file-with-long-name.js')), true);
     });
     it('Camelcase folder #2 needs to be prefixed', () => {
-        assert.equal(fs.existsSync(path.resolve(__dirname, '../dist/prefixed-folder/folder-with-long-name/sub-folder/another-file-with-camel-case.js')), true);
+        assert.equal(fs.existsSync(path.resolve(__dirname, '../dist/prefixed-folder/sub-folder/another-file-with-camel-case.js')), true);
     });
     it('First file needs to be prefixed', () => {
-        assert.equal(fs.existsSync(path.resolve(__dirname, '../dist/prefixed-folder/first.js')), true);
+        assert.equal(fs.existsSync(path.resolve(__dirname, '../dist/another-prefixed-folder/first.js')), true);
     });
     it('The second output file needs to be prefixed', () => {
-        assert.equal(fs.existsSync(path.resolve(__dirname, '../dist/prefixed-folder/second/second.js')), true);
+        assert.equal(fs.existsSync(path.resolve(__dirname, '../dist/second.js')), true);
     });
     it('The third output file needs to be prefixed', () => {
-        assert.equal(fs.existsSync(path.resolve(__dirname, '../dist/prefixed-folder/third/third/third.js')), true);
+        assert.equal(fs.existsSync(path.resolve(__dirname, '../dist/third/third.js')), true);
     });
 });
