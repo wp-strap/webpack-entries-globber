@@ -26,3 +26,6 @@ typings/
 
 # Yarn Integrity file
 .yarn-integrity
+
+# Locked files
+package-lock.json
