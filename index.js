@@ -6,9 +6,9 @@ const path = require('path');
 let directories = [];
 
 /**
- * class WebpackWatchedGlobEntries
+ * class WebpackEntriesGlobber
  */
-class WebpackWatchedGlobEntries {
+class WebpackEntriesGlobber {
 
     /**
      *
@@ -26,14 +26,15 @@ class WebpackWatchedGlobEntries {
 
         // Options defaults
         const pluginOptions = Object.assign({
-            basename_as_entry_id: false
+            basename_as_entry_id: false,
+            camelcase_to_dashes:  false
         }, pluginOptions_);
 
         return function () {
 
             // Check if globs are provided properly
-            if (typeof globs !== 'string' && !Array.isArray(globs)) {
-                throw new TypeError('globOptions must be a string or an array of strings');
+            if (typeof globs !== 'string' && !Array.isArray(globs) && typeof globs !== 'object') {
+                throw new TypeError('globOptions must be a string, an array of strings or a array of objects');
             }
 
             // Check globOptions if provided properly
@@ -42,17 +43,21 @@ class WebpackWatchedGlobEntries {
             }
 
             // Make entries an array
-            if (!Array.isArray(globs)) {
+            if (!Array.isArray(globs) && typeof globs !== 'object') {
                 globs = [globs];
             }
 
-            //
             let globbedFiles = {};
 
             // Map through the globs
-            globs.forEach(function (globString) {
+            globs.forEach(function (globStringOrObject) {
+                let globBaseOptions
 
-                let globBaseOptions = globBase(globString);
+                if (typeof globStringOrObject === 'object') {
+                    globBaseOptions = globBase(globStringOrObject.globString);
+                } else {
+                    globBaseOptions = globBase(globStringOrObject);
+                }
 
                 // Dont add if its already in the directories
                 if (directories.indexOf(globBaseOptions.base) === -1) {
@@ -60,11 +65,10 @@ class WebpackWatchedGlobEntries {
                 }
 
                 // Get the globbedFiles
-                let files = WebpackWatchedGlobEntries.getFiles(globString, globOptions, pluginOptions.basename_as_entry_name);
+                let files = WebpackEntriesGlobber.getFiles(globStringOrObject, globOptions, pluginOptions);
 
                 // Set the globbed files
                 globbedFiles = Object.assign(files, globbedFiles);
-
             });
 
             return globbedFiles;
@@ -73,25 +77,47 @@ class WebpackWatchedGlobEntries {
 
     /**
      * Create webpack file entry object
-     * @param globString
+     * @param globStringOrObject
      * @param globOptions
-     * @param basename_as_entry_name
+     * @param pluginOptions
      * @returns {Object}
      */
-    static getFiles(globString, globOptions, basename_as_entry_name) {
+    static getFiles(globStringOrObject, globOptions, pluginOptions) {
         const files = {};
+        let globString;
+
+        if (typeof globStringOrObject === 'object') {
+            globString = globStringOrObject.globString;
+        } else {
+            globString = globStringOrObject;
+        }
+
         const globBaseOptions = globBase(globString);
 
         glob.sync(globString, globOptions).forEach(function (file) {
             // Format the entryName
             let entryName = path
-                .relative(globBaseOptions.base, file)
-                .replace(path.extname(file), '')
-                .split(path.sep)
-                .join('/')
+              .relative(globBaseOptions.base, file)
+              .replace(path.extname(file), '')
+              .split(path.sep)
+              .join('/')
 
-            if (basename_as_entry_name) {
+            if (pluginOptions.basename_as_entry_name) {
                 entryName = path.basename(entryName);
+            }
+
+            if (typeof globStringOrObject === 'object') {
+                if (globStringOrObject.namePrefix !== 'undefined' && typeof globStringOrObject.namePrefix === 'string') {
+                    entryName = globStringOrObject.namePrefix + entryName;
+                }
+            }
+            if (pluginOptions.camelcase_to_dashes) {
+                entryName = entryName
+                  .replace(/[A-Z]/g, '-$&')
+                  .toLowerCase()
+                  .replace(/\/-/g, '/')
+                  .replace(/--/g, '-')
+                  .replace(/^-/, '');
             }
 
             // Add the entry to the files obj
@@ -134,5 +160,5 @@ class WebpackWatchedGlobEntries {
     }
 }
 
-module.exports = WebpackWatchedGlobEntries;
+module.exports = WebpackEntriesGlobber;
 

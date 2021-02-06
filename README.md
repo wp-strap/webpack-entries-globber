@@ -26,13 +26,13 @@ npm install --save-dev webpack-watched-glob-entries-plugin
 ```js
 
 // Get the plugin
-const WebpackWatchedGlobEntries = require('webpack-watched-glob-entries-plugin');
+const WebpackEntriesGlobber = require('webpack-watched-glob-entries-plugin');
  
 // In your Webpack config:
 {
     ... // At your entry definition
     
-    entry: WebpackWatchedGlobEntries.getEntries(
+    entry: WebpackEntriesGlobber.getEntries(
       [ 
         // Your path(s) 
         path.resolve(__dirname, 'entry/**/*.js'),
@@ -47,7 +47,7 @@ const WebpackWatchedGlobEntries = require('webpack-watched-glob-entries-plugin')
     ... // At the plugin definition
     
     plugins: [
-        new WebpackWatchedGlobEntries(),
+        new WebpackEntriesGlobber(),
     ],
     
     ...

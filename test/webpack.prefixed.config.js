@@ -6,7 +6,10 @@ module.exports = {
     entry: WebpackEntriesGlobber.getEntries(
         // Globs
         [
-            path.resolve(__dirname, 'src/**/*.js')
+            {
+                globString: path.resolve(__dirname, 'src/**/*.js'),
+                namePrefix: 'prefixed-folder/'
+            }
         ],
 
         // Glob options
@@ -14,7 +17,7 @@ module.exports = {
 
         // Plugin options
         {
-            basename_as_entry_name: true
+            camelcase_to_dashes: true
         }
     ),
     mode: 'development',

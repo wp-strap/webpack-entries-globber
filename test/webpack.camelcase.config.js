@@ -14,7 +14,7 @@ module.exports = {
 
         // Plugin options
         {
-            basename_as_entry_name: true
+            camelcase_to_dashes: true
         }
     ),
     mode: 'development',
