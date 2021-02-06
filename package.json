@@ -1,6 +1,6 @@
 {
     "name": "webpack-entries-globber",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "author": "WP-Strap <hello@wp-strap.com",
     "license": "MIT",
     "homepage": "https://github.com/wp-strap/webpack-watched-entries-globber",
