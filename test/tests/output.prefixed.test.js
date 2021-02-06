@@ -13,9 +13,9 @@ describe('Output', () => {
         assert.equal(fs.existsSync(path.resolve(__dirname, '../dist/prefixed-folder/first.js')), true);
     });
     it('The second output file needs to be prefixed', () => {
-        assert.equal(fs.existsSync(path.resolve(__dirname, '../dist/prefixed-folder/Second/second.js')), true);
+        assert.equal(fs.existsSync(path.resolve(__dirname, '../dist/prefixed-folder/second/second.js')), true);
     });
     it('The third output file needs to be prefixed', () => {
-        assert.equal(fs.existsSync(path.resolve(__dirname, '../dist/prefixed-folder/Third/Third/third.js')), true);
+        assert.equal(fs.existsSync(path.resolve(__dirname, '../dist/prefixed-folder/third/third/third.js')), true);
     });
 });
